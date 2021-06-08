@@ -34,8 +34,8 @@ def create_flow_seq(dim, depth):
     chain = []
     for i in range(depth):
         chain.append(main_layer(dim))
-        chain.append(model.RandomPermutation(dim))
-        chain.append(model.LULinear(dim))
+        chain.append(model.RandomPermutation(dim))  #进行一维随机置换
+        chain.append(model.LULinear(dim))   #LDU decomposition 单位下三角 对角 单位上三角矩阵的乘机
     chain.append(main_layer(dim))
     return model.SequentialFlow(chain)
 

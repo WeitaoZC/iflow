@@ -30,15 +30,15 @@ class TanhStochasticDynamics(DynamicModel):
         kp = 100
         x_n = 1/kp
         x_0 = 1.
-        kv = (x_n-x_0)/(self.N_to_stable * self.dt)
+        kv = (x_n-x_0)/(self.N_to_stable * self.dt) #(1/kp-1)/T_to_satbel
 
         ## Set the dynamics: N STEPS
-        self.Kv = nn.Parameter(torch.eye(dim) * kv).to(device).requires_grad_(requires_grad)
-        self.Kp = torch.eye(dim) * kp
+        self.Kv = nn.Parameter(torch.eye(dim) * kv).to(device).requires_grad_(requires_grad)    #(2*2)diagonal mitrix = kv
+        self.Kp = torch.eye(dim) * kp   #(2*2)diagonal mitrix = kp
 
         ## Variance in Linear Dynamics
         _std = 0.1
-        self.log_var = nn.Parameter(torch.ones(dim)*np.log(_std ** 2)).to(device).requires_grad_(requires_grad)
+        self.log_var = nn.Parameter(torch.ones(dim)*np.log(_std ** 2)).to(device).requires_grad_(requires_grad) #0.01
 
     @property
     def var(self):

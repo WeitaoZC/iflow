@@ -23,9 +23,9 @@ class LASA():
             tr_i = np.stack((x,y))
             self.trajs_real.append(tr_i.T)
         trajs_np = np.asarray(self.trajs_real)
-        self.n_trajs = trajs_np.shape[0]
-        self.trj_length = trajs_np.shape[1]
-        self.n_dims  = trajs_np.shape[2]
+        self.n_trajs = trajs_np.shape[0]        #number of trajectories         3
+        self.trj_length = trajs_np.shape[1]     #length(points) of a trajectory 250
+        self.n_dims  = trajs_np.shape[2]        #points dimensions              2(x,y)
 
         ## Normalize trajectories ##
         trajs_np = np.reshape(trajs_np, (self.n_trajs * self.trj_length, self.n_dims))
@@ -36,7 +36,7 @@ class LASA():
         ## Build Train Dataset
         self.train_data = []
         for i in range(self.trajs_normalized.shape[0]):
-            self.train_data.append(self.trajs_normalized[i, ...])
+            self.train_data.append(self.trajs_normalized[i, ...])   #[i, ...]第i个全部元素
         self.dataset = Dataset(trajs=self.train_data, device=device)
 
     def normalize(self, X):
@@ -49,7 +49,7 @@ class LASA():
 
 
 if __name__ == "__main__":
-    filename = 'Spoon'
+    filename = 'Sshape'
     device = torch.device('cpu')
     lasa = LASA(filename, device)
     print(lasa)
