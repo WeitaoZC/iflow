@@ -15,11 +15,11 @@ class LULinear(Linear):
 
         self.eps = eps
 
-        self.lower_indices = np.tril_indices(features, k=-1)
-        self.upper_indices = np.triu_indices(features, k=1)
-        self.diag_indices = np.diag_indices(features)
+        self.lower_indices = np.tril_indices(features, k=-1)    #下三角矩阵索引
+        self.upper_indices = np.triu_indices(features, k=1)     #上三角矩阵索引
+        self.diag_indices = np.diag_indices(features)           #主对角线索引
 
-        n_triangular_entries = ((features - 1) * features) // 2
+        n_triangular_entries = ((features - 1) * features) // 2 #1 | 3
 
         self.lower_entries = nn.Parameter(torch.zeros(n_triangular_entries))
         self.upper_entries = nn.Parameter(torch.zeros(n_triangular_entries))

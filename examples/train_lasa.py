@@ -60,7 +60,7 @@ if __name__ == '__main__':
         for local_x, local_y in dataloader:
             dataloader.dataset.set_step()
             optimizer.zero_grad()
-            loss = goto_dynamics_train(iflow, local_x, local_y)
+            loss = goto_dynamics_train(iflow, local_x, local_y)#local_x:起始位置  local_y:（20steps后位置   19  随机一个收敛点(都是一样的) 随机数）
             loss.backward(retain_graph=True)
             optimizer.step()
 

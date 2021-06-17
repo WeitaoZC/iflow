@@ -9,7 +9,7 @@ class CouplingLayer(nn.Module):
 
     def __init__(self, d, intermediate_dim=64, swap=False, nonlinearity='ReLu'):
         nn.Module.__init__(self)
-        self.d = d - (d // 2)
+        self.d = d - (d // 2)   #维度整除2 +1
         self.swap = swap
         if nonlinearity=='ReLu':
             self.nonlinearity = nn.ReLU(inplace=True)
@@ -17,28 +17,28 @@ class CouplingLayer(nn.Module):
             self.nonlinearity = nn.Tanh()
 
         self.net_s_t = nn.Sequential(
-            nn.Linear(self.d, intermediate_dim),
+            nn.Linear(self.d, intermediate_dim),    #input:1, output:64
             self.nonlinearity,
             nn.Linear(intermediate_dim, intermediate_dim),
             self.nonlinearity,
-            nn.Linear(intermediate_dim, (d - self.d) * 2),
+            nn.Linear(intermediate_dim, (d - self.d) * 2),  #output:2
         )
 
     def forward(self, x, logpx=None, reverse=False):
 
         if self.swap:
-            x = torch.cat([x[:, self.d:], x[:, :self.d]], 1)
+            x = torch.cat([x[:, self.d:], x[:, :self.d]], 1)    #x,y坐标互换
 
-        in_dim = self.d
-        out_dim = x.shape[1] - self.d
+        in_dim = self.d #1
+        out_dim = x.shape[1] - self.d   #1
 
-        s_t = self.net_s_t(x[:, :in_dim])
-        scale = torch.sigmoid(s_t[:, :out_dim]) +0.01
-        shift = s_t[:, out_dim:]
+        s_t = self.net_s_t(x[:, :in_dim])   #将x坐标输入FCN（self.net_s_t） 输出维度为2
+        scale = torch.sigmoid(s_t[:, :out_dim]) +0.01   #输出的第一维 取sigmoid + 0.01
+        shift = s_t[:, out_dim:]    #输出的其他维
 
-        logdetjac = torch.sum(torch.log(scale).view(scale.shape[0], -1), 1, keepdim=True)
+        logdetjac = torch.sum(torch.log(scale).view(scale.shape[0], -1), 1, keepdim=True)   #一维
 
-        if not reverse:
+        if not reverse: #正向计算，剩下的维度与 变换后的之前的维度 相计算
             y1 = x[:, self.d:] * scale + shift
             delta_logp = logdetjac
         else:

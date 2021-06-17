@@ -37,7 +37,7 @@ class LASA():
         self.train_data = []
         for i in range(self.trajs_normalized.shape[0]):
             self.train_data.append(self.trajs_normalized[i, ...])   #[i, ...]第i个全部元素
-        self.dataset = Dataset(trajs=self.train_data, device=device)
+        self.dataset = Dataset(trajs=self.train_data, device=device)#(3,250,2)
 
     def normalize(self, X):
         Xn = (X - self.mean)/self.std

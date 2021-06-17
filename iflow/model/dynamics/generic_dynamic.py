@@ -99,11 +99,11 @@ class DynamicModel(nn.Module):
 
     def conditional_distribution(self, xti, T=1, reverse=False):
         _mu = xti
-        _var = torch.zeros(xti.shape[0], self.dim, self.dim).to(xti)
+        _var = torch.zeros(xti.shape[0], self.dim, self.dim).to(xti)    #(batch,2,2)协方差矩阵
         if not reverse:
             for i in range(T):
-                Ad = self.first_Taylor_dyn(_mu) * self.dt + torch.eye(self.dim).to(xti)
-                _mu = self.velocity(_mu) * self.dt + _mu
+                Ad = self.first_Taylor_dyn(_mu) * self.dt + torch.eye(self.dim).to(xti) #(batch,2,2)
+                _mu = self.velocity(_mu) * self.dt + _mu    #(batch,2)
                 _var = torch.bmm(torch.bmm(Ad, _var), Ad) + self.var * self.dt
         else:
             for i in range(T):

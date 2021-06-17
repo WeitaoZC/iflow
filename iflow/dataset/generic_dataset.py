@@ -94,7 +94,7 @@ class Dataset(torch.utils.data.Dataset):
             self.x.append(tr_i_all) #(20,230*3,2)
 
         self.x = torch.from_numpy(np.array(self.x)).float().to(device)      #(20,230*3,2)
-        self.x_n = torch.from_numpy(np.array(self.x_n)).float().to(device)  #(3*20,2)
+        self.x_n = torch.from_numpy(np.array(self.x_n)).float().to(device)  #(3*20,2)收敛位置，对同一个轨迹就是同一个点
 
         self.len_n = self.x_n.shape[0]  #60
         self.len = self.x.shape[1]      #230*3
@@ -119,6 +119,7 @@ class Dataset(torch.utils.data.Dataset):
         X_N = self.x_n[index, :]
 
         return X, [X_1, int(self.step), X_N, index]
+        #起始位置  20steps后位置   19  随机一个收敛点(都是一样的) 随机数
 
 
 class CycleDataset(torch.utils.data.Dataset):

@@ -42,10 +42,11 @@ class TanhStochasticDynamics(DynamicModel):
 
     @property
     def var(self):
-        return torch.diag(torch.exp(self.log_var))
+        return torch.diag(torch.exp(self.log_var))  #0.01
 
     def velocity(self, x):
-        return torch.matmul(self.Kv, torch.tanh(torch.matmul(self.Kp, x.T))).T
+                            #(2*2)                            (2*2) @(2*batch)
+        return torch.matmul(self.Kv, torch.tanh(torch.matmul(self.Kp, x.T))).T  #(batch*2)
 
     def first_Taylor_dyn(self, x):
         ## Approximate the velocity with respect to the constant velocity case
