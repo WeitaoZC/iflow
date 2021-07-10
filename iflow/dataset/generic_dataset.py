@@ -81,25 +81,25 @@ class Dataset(torch.utils.data.Dataset):
     'Characterizes a dataset for PyTorch'
     def __init__(self, trajs, device, steps=20):
         'Initialization'
-        dim = trajs[0].shape[1] #(x,y)
+        dim = trajs[0].shape[1] #(x,y,z)
 
         self.x = []
-        self.x_n = np.zeros((0, dim))   #(0,2)
+        self.x_n = np.zeros((0, dim))   #(0,3)
         for i in range(steps):
             tr_i_all = np.zeros((0,dim))
-            for tr_i in  trajs:             #tr_i shape:(250,2)
-                _trj = tr_i[i:i-steps,:]    #0:-20->0:230
+            for tr_i in  trajs:             #tr_i shape:(1000,3)
+                _trj = tr_i[i:i-steps,:]    #0:-20->0:980
                 tr_i_all = np.concatenate((tr_i_all, _trj), 0)          #trajs[0][0:230]    shpae:(230*3,2)
                 self.x_n = np.concatenate((self.x_n, tr_i[-1:,:]),0)    #trajs[0][-1]       shape:(3*20,2)
             self.x.append(tr_i_all) #(20,230*3,2)
 
         self.x = torch.from_numpy(np.array(self.x)).float().to(device)      #(20,230*3,2)
-        self.x_n = torch.from_numpy(np.array(self.x_n)).float().to(device)  #(3*20,2)收敛位置，对同一个轨迹就是同一个点
+        self.x_n = torch.from_numpy(np.array(self.x_n)).float().to(device)  #(3*20,2)converge point, same point for one pattern
 
-        self.len_n = self.x_n.shape[0]  #60
-        self.len = self.x.shape[1]      #230*3
-        self.steps_length = steps       #20
-        self.step = steps - 1           #19
+        self.len_n = self.x_n.shape[0]  #60     #80
+        self.len = self.x.shape[1]      #230*3  #980*3
+        self.steps_length = steps       #20     #20
+        self.step = steps - 1           #19     #19
 
     def __len__(self):
         'Denotes the total number of samples'
@@ -119,7 +119,6 @@ class Dataset(torch.utils.data.Dataset):
         X_N = self.x_n[index, :]
 
         return X, [X_1, int(self.step), X_N, index]
-        #起始位置  20steps后位置   19  随机一个收敛点(都是一样的) 随机数
 
 
 class CycleDataset(torch.utils.data.Dataset):

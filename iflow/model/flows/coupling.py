@@ -9,7 +9,7 @@ class CouplingLayer(nn.Module):
 
     def __init__(self, d, intermediate_dim=64, swap=False, nonlinearity='ReLu'):
         nn.Module.__init__(self)
-        self.d = d - (d // 2)   #维度整除2 +1
+        self.d = d - (d // 2)   #dim//2 +1
         self.swap = swap
         if nonlinearity=='ReLu':
             self.nonlinearity = nn.ReLU(inplace=True)
@@ -17,7 +17,7 @@ class CouplingLayer(nn.Module):
             self.nonlinearity = nn.Tanh()
 
         self.net_s_t = nn.Sequential(
-            nn.Linear(self.d, intermediate_dim),    #input:1, output:64
+            nn.Linear(self.d, intermediate_dim),    #input:1, output:64 W:u(-sqrt(1/input_dim),sqrt(1/input_dim))
             self.nonlinearity,
             nn.Linear(intermediate_dim, intermediate_dim),
             self.nonlinearity,
@@ -27,18 +27,18 @@ class CouplingLayer(nn.Module):
     def forward(self, x, logpx=None, reverse=False):
 
         if self.swap:
-            x = torch.cat([x[:, self.d:], x[:, :self.d]], 1)    #x,y坐标互换
+            x = torch.cat([x[:, self.d:], x[:, :self.d]], 1)    #x,y interchange
 
         in_dim = self.d #1
         out_dim = x.shape[1] - self.d   #1
 
-        s_t = self.net_s_t(x[:, :in_dim])   #将x坐标输入FCN（self.net_s_t） 输出维度为2
-        scale = torch.sigmoid(s_t[:, :out_dim]) +0.01   #输出的第一维 取sigmoid + 0.01
-        shift = s_t[:, out_dim:]    #输出的其他维
+        s_t = self.net_s_t(x[:, :in_dim])   #input x to FCN（self.net_s_t） output dim:2
+        scale = torch.sigmoid(s_t[:, :out_dim]) +0.01   #first out dims with sigmoid + 0.01
+        shift = s_t[:, out_dim:]    #the other dims
 
         logdetjac = torch.sum(torch.log(scale).view(scale.shape[0], -1), 1, keepdim=True)   #一维
 
-        if not reverse: #正向计算，剩下的维度与 变换后的之前的维度 相计算
+        if not reverse:
             y1 = x[:, self.d:] * scale + shift
             delta_logp = logdetjac
         else:
@@ -72,7 +72,7 @@ class ResNetCouplingLayer(nn.Module):
             self.nonlinearity,
             nn.Linear(intermediate_dim, (d - self.d) * 2),
         )
-
+        #W: u(-a,a) a = gain*sqrt(6/(inout_dim + output_dim))
         nonlinearity_name = 'relu' if nonlinearity == 'ReLu' else 'tanh'
         nn.init.xavier_uniform_(self.net_s_t[0].weight,
                                 gain=nn.init.calculate_gain(nonlinearity_name)/10)

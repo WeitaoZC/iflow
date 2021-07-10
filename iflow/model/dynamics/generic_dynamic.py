@@ -59,19 +59,22 @@ class DynamicModel(nn.Module):
                 xt0 = xt1
         return xt0
 
-    def generate_trj(self, xti, T=1, reverse=False, noise=False):
+    def generate_trj(self, xti, xtn, reverse=False, noise=False):
         xt0 = xti
         trx = xt0[None, ...]
+        i = 0
         if not reverse:
-            for i in range(T - 1):
+            while(torch.dist(xt0, xtn, p=2)>0.03 and i<3000):
                 xt1 = self.step_forward(xt0, noise=noise)
                 xt0 = xt1
                 trx = torch.cat((trx, xt0[None, ...]))
+                i+=1
         else:
-            for i in range(T - 1):
+            while(torch.dist(xt0, xtn, p=2)>0.03 and i<3000):
                 xt1 = self.step_backwards(xt0, noise=noise)
                 xt0 = xt1
                 trx = torch.cat((trx, xt0[None, ...]))
+                i+=1
         return trx
 
     def generate_trj_density(self, xti, T=1, reverse=False):
@@ -99,7 +102,7 @@ class DynamicModel(nn.Module):
 
     def conditional_distribution(self, xti, T=1, reverse=False):
         _mu = xti
-        _var = torch.zeros(xti.shape[0], self.dim, self.dim).to(xti)    #(batch,2,2)协方差矩阵
+        _var = torch.zeros(xti.shape[0], self.dim, self.dim).to(xti)    #(batch,2,2)covariance matrix
         if not reverse:
             for i in range(T):
                 Ad = self.first_Taylor_dyn(_mu) * self.dt + torch.eye(self.dim).to(xti) #(batch,2,2)

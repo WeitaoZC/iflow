@@ -1,0 +1,89 @@
+-----epoch:1/200
+2000
+generating time:43.418131589889526
+#### IROS EVALUATION ####
+The Frechet Distance is: 2.349506900409937
+The DTW Distance is: 1512.7815925120121
+##########################
+Validation data Log Likelihood: 2.5151331424713135 | log pz : 5.936056613922119 | log detJ : -3.4209232330322266
+
+-----epoch:21/200
+2000
+generating time:29.316750526428223
+#### IROS EVALUATION ####
+The Frechet Distance is: 2.1709902764262092
+The DTW Distance is: 1437.9615183797562
+##########################
+Validation data Log Likelihood: 2.375694513320923 | log pz : 2.647326707839966 | log detJ : -0.27163198590278625
+
+-----epoch:41/200
+2000
+generating time:32.486048460006714
+#### IROS EVALUATION ####
+The Frechet Distance is: 1.3236903544412237
+The DTW Distance is: 871.2032537209366
+##########################
+Validation data Log Likelihood: 3.938159465789795 | log pz : 3.2861034870147705 | log detJ : 0.6520556211471558
+
+-----epoch:61/200
+2000
+generating time:31.62743854522705
+#### IROS EVALUATION ####
+The Frechet Distance is: 1.2542338958377217
+The DTW Distance is: 796.3099970355511
+##########################
+Validation data Log Likelihood: 3.637868881225586 | log pz : 2.5653226375579834 | log detJ : 1.072546362876892
+
+-----epoch:81/200
+2000
+generating time:20.09144616127014
+#### IROS EVALUATION ####
+The Frechet Distance is: 1.0833949527972837
+The DTW Distance is: 775.1007173418527
+##########################
+Validation data Log Likelihood: 3.6336278915405273 | log pz : 2.389021158218384 | log detJ : 1.244606852531433
+
+-----epoch:101/200
+2000
+generating time:30.036113739013672
+#### IROS EVALUATION ####
+The Frechet Distance is: 1.2164246484123593
+The DTW Distance is: 764.726922978255
+##########################
+Validation data Log Likelihood: 5.002819061279297 | log pz : 3.485442638397217 | log detJ : 1.5173763036727905
+
+-----epoch:121/200
+2000
+generating time:13.904951572418213
+#### IROS EVALUATION ####
+The Frechet Distance is: 1.254924988389295
+The DTW Distance is: 741.9796881643111
+##########################
+Validation data Log Likelihood: 6.008009433746338 | log pz : 4.1787495613098145 | log detJ : 1.8292598724365234
+
+-----epoch:141/200
+2000
+generating time:20.26023578643799
+#### IROS EVALUATION ####
+The Frechet Distance is: 1.2462018340080225
+The DTW Distance is: 654.3781800713828
+##########################
+Validation data Log Likelihood: 6.507015228271484 | log pz : 4.520936012268066 | log detJ : 1.9860786199569702
+
+-----epoch:161/200
+2000
+generating time:26.121443033218384
+#### IROS EVALUATION ####
+The Frechet Distance is: 1.2362745264505781
+The DTW Distance is: 652.7231058524465
+##########################
+Validation data Log Likelihood: 6.147097587585449 | log pz : 3.9997401237487793 | log detJ : 2.147357225418091
+
+-----epoch:181/200
+2000
+generating time:20.340336322784424
+#### IROS EVALUATION ####
+The Frechet Distance is: 1.1133427194447496
+The DTW Distance is: 612.9957082341617
+##########################
+Validation data Log Likelihood: 5.940398693084717 | log pz : 3.703869581222534 | log detJ : 2.2365288734436035

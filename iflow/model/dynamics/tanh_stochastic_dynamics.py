@@ -34,7 +34,7 @@ class TanhStochasticDynamics(DynamicModel):
 
         ## Set the dynamics: N STEPS
         self.Kv = nn.Parameter(torch.eye(dim) * kv).to(device).requires_grad_(requires_grad)    #(2*2)diagonal mitrix = kv
-        self.Kp = torch.eye(dim) * kp   #(2*2)diagonal mitrix = kp
+        self.Kp = (torch.eye(dim) * kp).to(device)   #(2*2)diagonal mitrix = kp
 
         ## Variance in Linear Dynamics
         _std = 0.1

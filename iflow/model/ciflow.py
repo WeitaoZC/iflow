@@ -32,9 +32,10 @@ class ContinuousDynamicFlow(nn.Module):
         #zt, log_p = self.dynamics(xt,log_detjacobians)
         return xt, log_detjacobians
 
-    def generate_trj(self, y0, T=100, noise=False, reverse=False):
+    def generate_trj(self, y0, yn, noise=False, reverse=False):
         z0 = self.flow_forward(y0)
-        trj_z = self.dynamics.generate_trj(z0, T=T, reverse = reverse, noise = noise)
+        zn = self.flow_forward(yn)
+        trj_z = self.dynamics.generate_trj(z0, zn, reverse = reverse, noise = noise)
         trj_y = self.flow_backward(trj_z[:, 0, :])
         return trj_y
 

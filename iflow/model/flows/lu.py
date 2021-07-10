@@ -15,9 +15,9 @@ class LULinear(Linear):
 
         self.eps = eps
 
-        self.lower_indices = np.tril_indices(features, k=-1)    #下三角矩阵索引
-        self.upper_indices = np.triu_indices(features, k=1)     #上三角矩阵索引
-        self.diag_indices = np.diag_indices(features)           #主对角线索引
+        self.lower_indices = np.tril_indices(features, k=-1)    #index of lower
+        self.upper_indices = np.triu_indices(features, k=1)     #index of upper
+        self.diag_indices = np.diag_indices(features)           #index of diog
 
         n_triangular_entries = ((features - 1) * features) // 2 #1 | 3
 

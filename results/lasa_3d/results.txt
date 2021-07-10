@@ -1,0 +1,7 @@
+
+Conclusion:
+1. the generated velocity seems smaller than true value which makes the generated trajectory couldn't reach the converging point. However, we can generate 2 times of the original points, so that the trajectory is compelete.
+
+If we generate more points, the trajectory still converge at the fimal points, which indicates that our model is stable.
+
+2.proper initilization makes the error lower, but also needs longer training time.

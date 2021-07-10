@@ -76,6 +76,47 @@ def visualize_vector_field(val_trj, iflow, device, fig_number=1):
     plt.draw()
     plt.pause(0.05)
 
+def visualize_3dvector_field(val_trj, iflow, device, fig_number=1):
+    _trajs = np.zeros((0, 3))
+    for trj in val_trj:
+        _trajs = np.concatenate((_trajs, trj),0)
+    min = _trajs.min(0) - 0.5
+    max = _trajs.max(0) + 0.5
+
+    n_sample = 100
+
+    x = np.linspace(min[0], max[0], n_sample)
+    y = np.linspace(min[1], max[1], n_sample)
+    z = np.linspace(min[2], max[2], n_sample)
+
+    xy = np.meshgrid(x, y)
+    h = np.concatenate(xy[0])
+    v = np.concatenate(xy[1])
+    hv = torch.Tensor(np.stack([h, v]).T).float()
+    if device is not None:
+        hv = hv.to(device)
+
+    hv_t1 = iflow.evolve(hv, T=3)
+    hv = hv.detach().cpu().numpy()
+    hv_t1 = hv_t1.detach().cpu().numpy()
+
+    vel = (hv_t1 - hv)
+
+    vel_x = np.reshape(vel[:, 0], (n_sample, n_sample))
+    vel_y = np.reshape(vel[:, 1], (n_sample, n_sample))
+    speed = np.sqrt(vel_x ** 2 + vel_y ** 2)
+    speed = speed/np.max(speed)
+
+    fig = plt.figure(fig_number, figsize=(10, 10))
+    plt.clf()
+    ax = plt.gca()
+
+    plt.streamplot(xy[0], xy[1], vel_x, vel_y, color=speed, density=[0.5, 1])
+    for i in range(len(val_trj)):
+        plt.plot(val_trj[i][:,0], val_trj[i][:,1], 'b')
+    plt.draw()
+    plt.pause(0.05)
+
 
 def save_vector_field(val_trj, iflow, device, save_fig, fig_number=1):
     _trajs = np.zeros((0, 2))

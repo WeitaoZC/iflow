@@ -1,0 +1,33 @@
+-----epoch:1/100
+The Frechet Distance is: 1.9066616217466592
+The DTW Distance is: 1011.8983180361143
+
+-----epoch:21/100
+The Frechet Distance is: 0.36110388427164497
+The DTW Distance is: 277.3351601731748
+
+-----epoch:41/100
+The Frechet Distance is: 0.4925452451367441
+The DTW Distance is: 273.6284039421955
+
+-----epoch:61/100
+2000
+#### IROS EVALUATION ####
+The Frechet Distance is: 0.451071903064434
+The DTW Distance is: 272.22784830381045
+
+-----epoch:81/100
+2000
+#### IROS EVALUATION ####
+The Frechet Distance is: 0.516566177661647
+The DTW Distance is: 259.2610437601089
+
+Conclusion:
+1. the generated velocity seems smaller than true value which makes the generated trajectory couldn't reach the converging point. However, we can generate 2 times of the original points, so that the trajectory is compelete.
+
+If we generate more points, the trajectory still converge at the fimal points, which indicates that our model is stable.
+
+2.proper initilization makes the error lower, but also needs longer training time.
+
+
+

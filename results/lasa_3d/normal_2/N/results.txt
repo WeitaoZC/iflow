@@ -1,0 +1,47 @@
+-----epoch:1/200
+generating time:0.47454214096069336
+generated points for 1th trajectory:908
+generated points for 2th trajectory:1027
+generated points for 3th trajectory:986
+generated points for 4th trajectory:1066
+#### IROS EVALUATION ####
+The Frechet Distance is: 2.389394012910022
+The DTW Distance is: 1045.8413453370395
+##########################
+Validation data Log Likelihood: 2.847120523452759 | log pz : 6.938354015350342 | log detJ : -4.091233730316162
+
+-----epoch:21/200
+generating time:0.9664514064788818
+generated points for 1th trajectory:1905
+generated points for 2th trajectory:2132
+generated points for 3th trajectory:2048
+generated points for 4th trajectory:2536
+#### IROS EVALUATION ####
+The Frechet Distance is: 0.9769782345169524
+The DTW Distance is: 624.2906697390736
+##########################
+Validation data Log Likelihood: 5.978637218475342 | log pz : 5.720327377319336 | log detJ : 0.2583101689815521
+
+-----epoch:41/200
+generating time:1.2430930137634277
+generated points for 1th trajectory:3001
+generated points for 2th trajectory:3001
+generated points for 3th trajectory:3001
+generated points for 4th trajectory:3001
+#### IROS EVALUATION ####
+The Frechet Distance is: 0.6491285309260467
+The DTW Distance is: 543.2851998944701
+##########################
+Validation data Log Likelihood: 5.344354152679443 | log pz : 4.508969306945801 | log detJ : 0.8353850245475769
+
+-----epoch:61/200
+generating time:1.2964510917663574
+generated points for 1th trajectory:3001
+generated points for 2th trajectory:3001
+generated points for 3th trajectory:3001
+generated points for 4th trajectory:3001
+#### IROS EVALUATION ####
+The Frechet Distance is: 0.6568142545647967
+The DTW Distance is: 479.94618094174365
+##########################
+Validation data Log Likelihood: 6.281684875488281 | log pz : 5.138298034667969 | log detJ : 1.1433866024017334

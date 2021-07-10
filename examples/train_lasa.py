@@ -19,11 +19,11 @@ weight_decay = 0.
 ## training variables ##
 nr_epochs = 1000
 ## filename ##
-filename = 'Sshape'
+filename = 'Angle'
 
 ######### GPU/ CPU #############
-#device = torch.device('cuda:' + str(0) if torch.cuda.is_available() else 'cpu')
-device = torch.device('cpu')
+device = torch.device('cuda:' + str(0) if torch.cuda.is_available() else 'cpu')
+#device = torch.device('cpu')
 
 #### Invertible Flow model #####
 def main_layer(dim):
@@ -42,12 +42,12 @@ def create_flow_seq(dim, depth):
 
 if __name__ == '__main__':
     ########## Data Loading #########
-    data = lasa_dataset.LASA(filename = filename)
+    data = lasa_dataset.LASA(filename = filename, device = device)
     dim = data.dim
     params = {'batch_size': batch_size, 'shuffle': True}
     dataloader = DataLoader(data.dataset, **params)
     ######### Model #########
-    dynamics = model.TanhStochasticDynamics(dim, dt=0.01, T_to_stable=2.5)
+    dynamics = model.TanhStochasticDynamics(dim, device= device, dt=0.01, T_to_stable=2.5)
     #dynamics = model.LinearStochasticDynamics(dim, dt=0.01, T_to_stable=2.5)
     flow = create_flow_seq(dim, depth)
     iflow = model.ContinuousDynamicFlow(dynamics=dynamics, model=flow, dim=dim).to(device)

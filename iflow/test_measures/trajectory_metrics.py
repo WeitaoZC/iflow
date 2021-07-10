@@ -102,6 +102,11 @@ def mean_swept_error(ref_trj_l ,pred_tr_l):
     error_n = error / n_trj
     return error_n
 
+def mean_swept_space(ref_trj_l ,pred_tr_l):
+    n_trj = len(pred_tr_l)
+
+    return 0
+
 
 def area_between_error(ref_trj_l, pred_tr_l):
     n_trj = len(pred_tr_l)
@@ -115,6 +120,9 @@ def area_between_error(ref_trj_l, pred_tr_l):
 
 
 def mean_frechet_error(ref_trj_l, pred_tr_l):
+    '''
+    rope needed between the 2 curves
+    '''
     n_trj = len(pred_tr_l)
 
     error = 0
@@ -126,6 +134,9 @@ def mean_frechet_error(ref_trj_l, pred_tr_l):
 
 
 def dtw_distance(ref_trj_l, pred_tr_l):
+    '''
+    dynamic time warping
+    '''
     n_trj = len(pred_tr_l)
 
     error = 0
@@ -136,29 +147,29 @@ def dtw_distance(ref_trj_l, pred_tr_l):
     return error_n
 
 
-def iros_evaluation(val_trajs, iflow, device):
+def iros_evaluation(val_trajs, predicted_trajs, device):
     dim = val_trajs[0].shape[1]
 
     ### Generate Predicted Trajectories ###
-    predicted_trajs = []
-    for trj in val_trajs:
-        n_trj = trj.shape[0]
-        y0 = trj[0, :]
-        y0 = torch.from_numpy(y0[None, :]).float().to(device)
-        traj_pred = iflow.generate_trj( y0, T=n_trj)
-        traj_pred = traj_pred.detach().cpu().numpy()
-        predicted_trajs.append(traj_pred)
+    # predicted_trajs = []
+    # for trj in val_trajs:
+    #     n_trj = trj.shape[0]
+    #     y0 = trj[0, :]
+    #     y0 = torch.from_numpy(y0[None, :]).float().to(device)
+    #     traj_pred = iflow.generate_trj( y0, T=n_trj*2)
+    #     traj_pred = traj_pred.detach().cpu().numpy()
+    #     predicted_trajs.append(traj_pred)
 
     print('#### IROS EVALUATION ####')
-    error_mean = squared_mean_error(val_trajs, predicted_trajs)
-    print('The mean Error is: {}'.format(error_mean))
+    #error_mean = squared_mean_error(val_trajs, predicted_trajs)
+    #print('The mean Error is: {}'.format(error_mean))
     error_frechet = mean_frechet_error(val_trajs, predicted_trajs)
     print('The Frechet Distance is: {}'.format(error_frechet))
     error_dtw = dtw_distance(val_trajs, predicted_trajs)
     print('The DTW Distance is: {}'.format(error_dtw))
-    error_swept = mean_swept_error(val_trajs, predicted_trajs)
-    print('The Swept Area error is: {}'.format(error_swept))
-    error_area = area_between_error(val_trajs, predicted_trajs)
-    print('The Area error is: {}'.format(error_area))
+    #error_swept = mean_swept_error(val_trajs, predicted_trajs)
+    #print('The Swept Area error is: {}'.format(error_swept))
+    #error_area = area_between_error(val_trajs, predicted_trajs)
+    #print('The Area error is: {}'.format(error_area))
     print('##########################')
 

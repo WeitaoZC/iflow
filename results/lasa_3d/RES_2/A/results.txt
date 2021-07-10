@@ -1,0 +1,24 @@
+-----epoch:1/100
+#### IROS EVALUATION ####
+The Frechet Distance is: 2.7849053094294245
+The DTW Distance is: 1879.7048508780358
+
+-----epoch:21/100
+#### IROS EVALUATION ####
+The Frechet Distance is: 3.0678591685580114
+The DTW Distance is: 2708.456153932916
+
+-----epoch:41/100
+#### IROS EVALUATION ####
+The Frechet Distance is: 0.6197863449701524
+The DTW Distance is: 521.1965943577685
+
+-----epoch:61/100
+#### IROS EVALUATION ####
+The Frechet Distance is: 0.584696881141304
+The DTW Distance is: 437.34966106640604
+
+-----epoch:81/100
+#### IROS EVALUATION ####
+The Frechet Distance is: 0.48250169011715033
+The DTW Distance is: 383.52757151973844
