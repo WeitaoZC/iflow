@@ -15,9 +15,9 @@ class LASA3D():
         self.filename = filename
         self.dim = 3
         self.device = device
-        mat = spio.loadmat(directory + filename + '.mat', squeeze_me=True)
+        useddata = spio.loadmat(directory + filename + '.mat', squeeze_me=True)
         self.trajs_real = []
-        for demo_i in mat['demoSPD']:
+        for demo_i in useddata['demoSPD']:
             self.trajs_real.append(demo_i.tolist()[0].transpose())
         trajs_np = np.asarray(self.trajs_real)
         self.n_trajs = trajs_np.shape[0]        #number of trajectories         4

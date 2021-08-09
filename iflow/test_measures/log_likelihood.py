@@ -8,7 +8,7 @@ def log_likelihood(val_data_y0, val_data_y1, step, iflow, device):
     log_p_z0 = p_x0_x1.log_prob(x_0)
     log_likeli = log_p_z0 + log_det_J_x0.squeeze()
     print('Validation data Log Likelihood: {} | log pz : {} | log detJ : {}'.format(torch.mean(log_likeli), torch.mean(log_p_z0), torch.mean(log_det_J_x0[:, 0])))
-
+    return torch.mean(log_likeli)
 
 def cycle_log_likelihood(val_data_y0, val_data_y1,phase, step, iflow, device):
     ## Separate Data ##

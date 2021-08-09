@@ -50,6 +50,7 @@ def visualize_3d_generated_trj(val_trj, trj_y, device, fig_number=1,):
     ax.set_xlabel("X")
     ax.set_ylabel("Y")
     ax.set_zlabel("Z")
+    colors = ["r",'g','k','b']
     for i in range(n_trj):
         # y_0 = torch.from_numpy(val_trj[i][:1, :]).float().to(device)
         # trj_y = iflow.generate_trj(y_0, T=int(val_trj[i].shape[0]*2))
@@ -59,8 +60,8 @@ def visualize_3d_generated_trj(val_trj, trj_y, device, fig_number=1,):
         # print(trj_y[-10:,:])
         # print(val_trj[i][-10:,:])
 
-        ax.plot(trj_y[i][:,0], trj_y[i][:,1], trj_y[i][:,2],'g')
-        ax.plot(val_trj[i][:,0], val_trj[i][:,1], val_trj[i][:,2],'b')
+        ax.plot(trj_y[i][:,0], trj_y[i][:,1], trj_y[i][:,2],color = colors[i])
+        ax.plot(val_trj[i][:,0], val_trj[i][:,1], val_trj[i][:,2],color = colors[i],linestyle = ":")
         print("generated points for {}th trajectory:{}".format(i+1,len(trj_y[i])))
     #plt.savefig("/home/walter/DL/iflow/results/lasa_3d/epoch{}.jpg".format(epoch))
     plt.show()

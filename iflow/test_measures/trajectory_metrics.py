@@ -160,16 +160,18 @@ def iros_evaluation(val_trajs, predicted_trajs, device):
     #     traj_pred = traj_pred.detach().cpu().numpy()
     #     predicted_trajs.append(traj_pred)
 
-    print('#### IROS EVALUATION ####')
+    # print('#### IROS EVALUATION ####')
     #error_mean = squared_mean_error(val_trajs, predicted_trajs)
     #print('The mean Error is: {}'.format(error_mean))
-    error_frechet = mean_frechet_error(val_trajs, predicted_trajs)
-    print('The Frechet Distance is: {}'.format(error_frechet))
+    #error_frechet = mean_frechet_error(val_trajs, predicted_trajs)
+    #print('The Frechet Distance is: {}'.format(error_frechet))
     error_dtw = dtw_distance(val_trajs, predicted_trajs)
-    print('The DTW Distance is: {}'.format(error_dtw))
+    # print('The DTW Distance is: {}'.format(error_dtw))
     #error_swept = mean_swept_error(val_trajs, predicted_trajs)
     #print('The Swept Area error is: {}'.format(error_swept))
     #error_area = area_between_error(val_trajs, predicted_trajs)
     #print('The Area error is: {}'.format(error_area))
-    print('##########################')
+    # print('##########################')
+
+    return 0,error_dtw
 
