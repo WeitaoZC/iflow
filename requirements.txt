@@ -5,3 +5,5 @@ scipy
 matplotlib
 sklearn
 similaritymeasures
+optuna
+tensorboard
