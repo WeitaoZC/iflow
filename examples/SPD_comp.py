@@ -5,9 +5,10 @@ import scipy.io as spio
 from scipy.linalg import expm, logm
 import scipy.interpolate as ci
 from iflow import model
-from iflow.dataset import lasa_3d_dataset
+from iflow.dataset import lasa_spd_dataset
 from iflow.visualization import visualize_3d_generated_trj
 import matplotlib.pyplot as plt
+from torch.utils.data import DataLoader
 
 device = torch.device('cuda:' + str(0) if torch.cuda.is_available() else 'cpu')
 directory = os.path.abspath(os.path.join(os.path.dirname(__file__), '../', 'data')) + '/LASA_HandWriting_SPD/'
@@ -89,8 +90,8 @@ def create_flow_seq(dim, depth, acti_func):
 
 # test
 if __name__ == '__main__':
-    filename = 'NShape_SPD'
-    layers = 8
+    filename = 'GShape_SPD'
+    layers = 11
     activation_function = "ReLu"
     data = spio.loadmat(directory + filename + '.mat', squeeze_me=True)
     SPDs = []
@@ -104,14 +105,23 @@ if __name__ == '__main__':
             m = np.array([SPDs[j][0][0][i], SPDs[j][0][1][i], SPDs[j][1][0][i], SPDs[j][1][1][i]]).reshape(2, 2)
             SPD_m.append(m)
 
-    data = lasa_3d_dataset.LASA3D(filename=filename, device=device)
+    data = lasa_spd_dataset.LASA_SPD(filename=filename, device=device)
     dim = data.dim
     dynamics = model.TanhStochasticDynamics(dim, device=device, dt=0.003, T_to_stable=3)
     flow = create_flow_seq(dim, layers, activation_function)
     iflow = model.ContinuousDynamicFlow(dynamics=dynamics, model=flow, dim=dim).to(device)
-    iflow.load_state_dict(torch.load(os.getcwd() + "/results/lasa_3d/normal/saved_model/" + filename + ".pt"))
+    iflow.load_state_dict(torch.load(os.getcwd() + "/search/best_models/GShape_SPD_11_best.pt"))
+    dataloader = DataLoader(data.dataset, batch_size=1)
     with torch.no_grad():
         iflow.eval()
+        for local_x, local_y in dataloader:
+            dataloader.dataset.step = 1
+            y0 = local_x
+            y1 = local_y[0]
+            x_0, log_det_J_x0 = iflow(y0)
+            x_1, log_det_J_x1 = iflow(y1)
+            print(x_0,x_1)
+    '''
         predicted_trajs = []
         for trj in data.train_data:
             n_trj = trj.shape[0]
@@ -148,9 +158,9 @@ if __name__ == '__main__':
     comp_inds = []
     LD_e = []
     begin = 0
-    for i in range(len(unnormlized)):
+    for i in range(4):
         comp_inds.append(find_pair(predicted_trajs[i], data.train_data[i]))
-        for j in range(len(comp_inds[i])):
+        for j in range(1000):
             LD_e.append(Log_Euclidean_d(exp_map(sym_m[begin + comp_inds[i][j]]), SPD_m[i * 1000 + j]))
             # print(begin+comp_inds[i][j])
         begin += len(unnormlized[i])
@@ -179,3 +189,4 @@ if __name__ == '__main__':
     print("max error:{}".format(max(LD_e)))
     print("min error:{}".format(min(LD_e)))
     print("average error for {} :{}".format(filename, aver_e))
+    '''

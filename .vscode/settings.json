@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/home/walter/anaconda3/envs/pyt/bin/python"
+    "python.pythonPath": "/home/walter/anaconda3/envs/pyt/bin/python",
+    "ros.distro": "noetic"
 }

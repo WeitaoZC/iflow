@@ -3,9 +3,10 @@ import numpy as np
 import torch
 import optuna
 from optuna.trial import TrialState
+from optuna.samplers import TPESampler
 import joblib
 import torch.optim as optim
-from iflow.dataset import lasa_3d_dataset
+from iflow.dataset import lasa_spd_dataset
 from torch.utils.data import DataLoader
 from iflow import model
 from iflow.trainers import goto_dynamics_train
@@ -18,19 +19,16 @@ batch_size = 128
 ## optimization ##
 weight_decay = 0.
 ## training variables ##
-nr_epochs = 100
+nr_epochs = 90
 ## filename ##
-filename = 'NShape_SPD' #choose input data
+filename = 'GShape_SPD' #choose input data
 
 ######### GPU/ CPU #############
 device = torch.device('cuda:' + str(0) if torch.cuda.is_available() else 'cpu')
 
 
 #set the random seed
-SEED = 10
-np.random.seed(SEED)
-torch.manual_seed(SEED)
-torch.cuda.manual_seed(SEED)
+SEED = 1
 
 #### Invertible Flow model #####
 def main_layer(dim, acti_func):
@@ -48,8 +46,15 @@ def create_flow_seq(dim, depth, acti_func):
 
 
 def objective(trial):
+
+    ####set inner seed####
+    seed = trial.number*2
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    
     ########## Data Loading #########
-    data = lasa_3d_dataset.LASA3D(filename = filename, device = device)
+    data = lasa_spd_dataset.LASA_SPD(filename = filename, device = device)
     dim = data.dim
     params = {'batch_size': batch_size, 'shuffle': True}
     dataloader = DataLoader(data.dataset, **params)
@@ -57,16 +62,16 @@ def objective(trial):
     dynamics = model.TanhStochasticDynamics(dim, device = device,dt=0.003, T_to_stable=3)
     #dynamics = model.LinearStochasticDynamics(dim, dt=0.01, T_to_stable=2.5)
 
-    #set search range for the number of layers
-    n_layers = trial.suggest_int("n_layers", 6, 10)
-    activation_func = trial.suggest_categorical("activation function", ["ReLu", "Tanh"])
-    flow = create_flow_seq(dim, n_layers, activation_func)
+    ###### set search range for the number of layers
+    n_layers = trial.suggest_int("n_layers", 8, 12)
+    # activation_func = trial.suggest_categorical("activation function", ["ReLu", "Tanh"])
+    flow = create_flow_seq(dim, n_layers, "ReLu")
     iflow = model.ContinuousDynamicFlow(dynamics=dynamics, model=flow, dim=dim).to(device)
     ########## Optimization ################
     params = list(flow.parameters()) + list(dynamics.parameters())
 
-    optimizer_name = trial.suggest_categorical("optimizer", ["Adam", "RMSprop", "Adamax","SGD"])
-    lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
+    optimizer_name = trial.suggest_categorical("optimizer", ["Adam", "Adamax"])
+    lr = trial.suggest_float("lr", 1e-4, 1e-2, log=True)
     optimizer = getattr(optim, optimizer_name)(params, lr=lr, weight_decay= 0)
     
     error = 10000
@@ -96,16 +101,18 @@ def objective(trial):
                 frechet_e, dtw_e = iros_evaluation(data.train_data, predicted_trajs, device)
                 if dtw_e < error:
                     error = dtw_e
+                    torch.save(iflow.state_dict(), os.getcwd() + "/search/saved_model/" + filename + "_trial" + str(trial.number) +"_best.pt")
         trial.report(error, nr_epochs)
         if trial.should_prune():
             raise optuna.exceptions.TrialPruned()
     return error
 
 if __name__ == '__main__':
-    study = optuna.create_study(direction="minimize")
-    study.optimize(objective, n_trials=100)
+    sampler = TPESampler(SEED)
+    study = optuna.create_study(direction="minimize",sampler=sampler)
+    study.optimize(objective, n_trials=80)
 
-    joblib.dump(study, "study.pkl")
+    joblib.dump(study, "study_1_8_relu_adamax.pkl")
 
     pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
     complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])    

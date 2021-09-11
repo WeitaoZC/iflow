@@ -2,7 +2,7 @@ import os, sys, time
 import numpy as np
 import torch
 import torch.optim as optim
-from iflow.dataset import lasa_spd_dataset
+from iflow.dataset import lasa_uq_dataset
 from torch.utils.data import DataLoader
 from iflow import model
 from iflow.trainers import goto_dynamics_train
@@ -14,11 +14,11 @@ from torch.utils.tensorboard import SummaryWriter
 writer = SummaryWriter("experiment")
 
 ## filename ##
-filename = 'Angle_SPD' #choose input data
+filename = 'WShape_UQ' #choose input data
 ## hyperparameters 
-depth = 12
+depth = 8
 activation_function = "ReLu"
-lr = 0.0005039326657854342
+lr = 0.0013063372660080718
 batch_size = 128
 nr_epochs = 100
 
@@ -31,7 +31,7 @@ weight_decay = 0.
 device = torch.device('cuda:' + str(0) if torch.cuda.is_available() else 'cpu')
 
 #set the random seed
-SEED = 90
+SEED = 2
 np.random.seed(SEED)
 torch.manual_seed(SEED)
 torch.cuda.manual_seed(SEED)
@@ -53,7 +53,7 @@ def create_flow_seq(dim, depth, acti_func):
 
 if __name__ == '__main__':
     ########## Data Loading #########
-    data = lasa_spd_dataset.LASA_SPD(filename = filename, device = device)
+    data = lasa_uq_dataset.LASA_UQ(filename = filename, device = device)
     dim = data.dim
     params = {'batch_size': batch_size, 'shuffle': True}
     dataloader = DataLoader(data.dataset, **params)
@@ -103,11 +103,11 @@ if __name__ == '__main__':
                 #visualize_latent_distribution(data.train_data, iflow, device, fig_number=1)
                 frechet_e, dtw_e = iros_evaluation(data.train_data, predicted_trajs, device)
                 print('The DTW Distance is: {}'.format(dtw_e))
-                writer.add_scalar('A_12', dtw_e, i)
+                writer.add_scalar('W_11_UQ', dtw_e, i)
                 # writer.add_scalars('error', {'Frechet_error': frechet_e, 'DTW_error':dtw_e},i)
                 if dtw_e < error:
                     error = dtw_e
-                    torch.save(iflow.state_dict(), os.getcwd() + "/search/best_models/" + filename + "_12_" +"best.pt")
+                    torch.save(iflow.state_dict(), os.getcwd() + "/search/best_models/" + filename + "_11_" +"best.pt")
 
                 ## Prepare Data ##
                 # step = 20

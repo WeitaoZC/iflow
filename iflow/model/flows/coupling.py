@@ -74,10 +74,10 @@ class ResNetCouplingLayer(nn.Module):
         )
         #W: u(-a,a) a = gain*sqrt(6/(inout_dim + output_dim))
         nonlinearity_name = 'relu' if nonlinearity == 'ReLu' else 'tanh'
-        nn.init.kaiming_uniform_(self.net_s_t[0].weight,
-                                mode='fan_in', nonlinearity='relu')
-        nn.init.kaiming_uniform_(self.net_s_t[2].weight,
-                                mode='fan_in', nonlinearity='relu')
+        nn.init.xavier_uniform_(self.net_s_t[0].weight,
+                                gain=nn.init.calculate_gain('linear')/10)
+        nn.init.xavier_uniform_(self.net_s_t[2].weight,
+                                gain=nn.init.calculate_gain('linear')/10)
         nn.init.xavier_uniform_(self.net_s_t[4].weight,
                                 gain=nn.init.calculate_gain('linear')/10)
 

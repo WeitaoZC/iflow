@@ -5,10 +5,10 @@ import torch
 from iflow.dataset.generic_dataset import Dataset
 
 
-directory = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..','data')) + '/LASA_HandWriting_SPD/'
+directory = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..','data')) + '/LASA_HandWriting_UQ/'
 
 
-class LASA3D():
+class LASA_UQ():
     def __init__(self, filename, device=torch.device('cpu')):
 
         ## Define Variables and Load trajectories ##
@@ -17,7 +17,7 @@ class LASA3D():
         self.device = device
         useddata = spio.loadmat(directory + filename + '.mat', squeeze_me=True)
         self.trajs_real = []
-        for demo_i in useddata['demoSPD']:
+        for demo_i in useddata['demoUQ']:
             self.trajs_real.append(demo_i.tolist()[0].transpose())
         trajs_np = np.asarray(self.trajs_real)
         self.n_trajs = trajs_np.shape[0]        #number of trajectories         4
@@ -46,7 +46,7 @@ class LASA3D():
 
 
 if __name__ == "__main__":
-    filename = 'Angle_SPD'
+    filename = 'Angle_UQ'
     device = torch.device('cpu')
-    lasa3d = LASA3D(filename, device)
+    lasa3d = LASA_UQ(filename, device)
     print(lasa3d)
