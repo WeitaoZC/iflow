@@ -76,8 +76,8 @@ def create_flow_seq(dim, depth, acti_func):
 
 # test
 if __name__ == '__main__':
-    filename = 'WShape_UQ'
-    layers = 12
+    filename = 'Sine_UQ'
+    layers = 11
     activation_function = "ReLu"
     data = spio.loadmat(directory + filename + '.mat', squeeze_me=True)
     UQs = []
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     dynamics = model.TanhStochasticDynamics(dim, device=device, dt=0.003, T_to_stable=3)
     flow = create_flow_seq(dim, layers, activation_function)
     iflow = model.ContinuousDynamicFlow(dynamics=dynamics, model=flow, dim=dim).to(device)
-    iflow.load_state_dict(torch.load(os.getcwd() + "/search/best_models/" + "WShape_SPD_12" +"_best.pt"))
+    iflow.load_state_dict(torch.load(os.getcwd() + "/best_models/" + "Sine_SPD_11" +"_best.pt"))
     with torch.no_grad():
         iflow.eval()
         predicted_trajs = []

@@ -1,7 +1,21 @@
 from numpy import tri
 import torch
+import os
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+
+def plane_coord(xr,yr,zr,a,b,c,d):
+    '''
+    generate the coordinates of a plane (ax+by+cy+d=0) in 3d space of xr range alone x axis, same for y and z
+    only 2 of xr,yr,zr are lists, the other one must be []
+    a,b,c,d are scalars that all should be given 
+    '''
+    coord = []
+    for x in xr:
+        for y in yr:
+            coord.append((x,y,x))
+    return coord
+
 
 def visualize_trajectories(val_trajs, iflow, device, fig_number=1):
     dim = val_trajs[0].shape[1]
@@ -39,7 +53,7 @@ def visualize_2d_generated_trj(val_trj, iflow, device, fig_number=1):
     plt.draw()
     plt.pause(0.001)
 
-def visualize_3d_generated_trj(val_trj, trj_y, device, fig_number=1,):
+def visualize_3d_generated_trj(val_trj, trj_y, device, fig_number=1, fig_name = None):
     n_trj = len(val_trj)
     dim = val_trj[0].shape[-1]
 
@@ -52,17 +66,10 @@ def visualize_3d_generated_trj(val_trj, trj_y, device, fig_number=1,):
     ax.set_zlabel("Z")
     colors = ["r",'g','k','b']
     for i in range(n_trj):
-        # y_0 = torch.from_numpy(val_trj[i][:1, :]).float().to(device)
-        # trj_y = iflow.generate_trj(y_0, T=int(val_trj[i].shape[0]*2))
-        # trj_y = trj_y.detach().cpu().numpy()
-        
-        # print(trj_y[0:10,:])
-        # print(trj_y[-10:,:])
-        # print(val_trj[i][-10:,:])
-
         ax.plot(trj_y[i][:,0], trj_y[i][:,1], trj_y[i][:,2],color = colors[i])
         ax.plot(val_trj[i][:,0], val_trj[i][:,1], val_trj[i][:,2],color = colors[i],linestyle = ":")
-        print("generated points for {}th trajectory:{}".format(i+1,len(trj_y[i])))
-    #plt.savefig("/home/walter/DL/iflow/results/lasa_3d/epoch{}.jpg".format(epoch))
+    ax.view_init(elev=-90, azim=60)
+    # plt.savefig(os.getcwd() +"/results/trajectories/"+ fig_name +".svg"，dpi = )
+    # plt.close()
     plt.show()
     plt.pause(0.001)
