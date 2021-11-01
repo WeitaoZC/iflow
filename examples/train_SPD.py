@@ -2,6 +2,7 @@
 import os, sys, time
 import numpy as np
 import torch
+import argparse
 import torch.optim as optim
 from iflow.dataset import lasa_spd_dataset
 from torch.utils.data import DataLoader
@@ -12,15 +13,14 @@ from iflow.visualization import visualize_latent_distribution, visualize_3d_gene
 from iflow.test_measures import log_likelihood, iros_evaluation
 from torch.utils.tensorboard import SummaryWriter
 
-writer = SummaryWriter("random training")
+writer = SummaryWriter("bestsearch")
 
 
-## hyperparameters 
-depth = 11
+
 activation_function = "ReLu"
 # lr = 0.0009836349843763616
 batch_size = 128
-nr_epochs = 300
+nr_epochs = 100
 
 ## other parameters
 percentage = .99
@@ -29,12 +29,6 @@ weight_decay = 0.
 
 ######### GPU/ CPU #############
 device = torch.device('cuda:' + str(0) if torch.cuda.is_available() else 'cpu')
-
-#set the random seed
-# SEED = 48
-# np.random.seed(SEED)
-# torch.manual_seed(SEED)
-# torch.cuda.manual_seed(SEED)
 
 #### Invertible Flow model #####
 def main_layer(dim, acti_func):
@@ -52,6 +46,19 @@ def create_flow_seq(dim, depth, acti_func):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='manual to this script')
+    parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--depth", type=int, default=10)
+    parser.add_argument("--lr", type=float, default=0.01)
+    args = parser.parse_args()
+    ## hyperparameters 
+    depth = args.depth
+    #set the random seed
+    SEED = args.seed
+    np.random.seed(SEED)
+    torch.manual_seed(SEED)
+    torch.cuda.manual_seed(SEED)
+
     ## filename ##
     all_DTW = []
     for filename in os.listdir(os.getcwd()+ '/data/LASA_HandWriting_SPD/'):  #choose input data
@@ -70,7 +77,7 @@ if __name__ == '__main__':
         iflow = model.ContinuousDynamicFlow(dynamics=dynamics, model=flow, dim=dim).to(device)
         ########## Optimization ################
         params = list(flow.parameters()) + list(dynamics.parameters())
-        optimizer = optim.Adam(params,weight_decay= 0)
+        optimizer = optim.Adam(params,lr = args.lr, weight_decay= 0)
 
         
         error = 10000
@@ -109,11 +116,11 @@ if __name__ == '__main__':
                     #visualize_latent_distribution(data.train_data, iflow, device, fig_number=1)
                     frechet_e, dtw_e = iros_evaluation(data.train_data, predicted_trajs, device)
                     # print('The DTW Distance is: {}'.format(dtw_e))
-                    writer.add_scalar(filename+"11random", dtw_e, i)
+                    writer.add_scalar(filename + str(args.seed) + str(args.depth) + str(round(args.lr, 6)), dtw_e, i)
                     DTW_loss.append(dtw_e)
                     if dtw_e < error:
                         error = dtw_e
-                        torch.save(iflow.state_dict(), os.getcwd() + "/best_models/random/" + filename + "_11_random_" +"best.pt")
+                        torch.save(iflow.state_dict(), os.getcwd() + "/best_models/search/" + filename + str(args.depth) +"best.pt")
 
                     ## Prepare Data ##
                     # step = 20
@@ -125,5 +132,5 @@ if __name__ == '__main__':
                     #print('The Variance of the latent dynamics are: {}'.format(torch.exp(iflow.dynamics.log_var)))
                     #print('The Velocity of the latent dynamics are: {}'.format(iflow.dynamics.Kv[0,0]))
         all_DTW.append(DTW_loss)
-    np.savetxt(os.getcwd() +"/best_models/random/all_dtw_e.npy", np.array(all_DTW))
+    np.savetxt(os.getcwd() +"/best_models/search/"+ str(args.depth) +"_all_dtw_e.npy", np.array(all_DTW))
     writer.close()

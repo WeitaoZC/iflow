@@ -9,9 +9,10 @@ import torch.optim as optim
 from iflow.dataset import lasa_spd_dataset
 from torch.utils.data import DataLoader
 from iflow import model
+import argparse
 from iflow.trainers import goto_dynamics_train
 from iflow.utils import to_numpy, to_torch
-from iflow.visualization import visualize_latent_distribution, visualize_3dvector_field, visualize_3d_generated_trj
+from iflow.visualization import visualize_latent_distribution, visualize_3d_generated_trj
 from iflow.test_measures import log_likelihood, iros_evaluation
 
 percentage = .99
@@ -19,9 +20,9 @@ batch_size = 128
 ## optimization ##
 weight_decay = 0.
 ## training variables ##
-nr_epochs = 90
+
 ## filename ##
-filename = 'GShape_SPD' #choose input data
+
 
 ######### GPU/ CPU #############
 device = torch.device('cuda:' + str(0) if torch.cuda.is_available() else 'cpu')
@@ -54,7 +55,7 @@ def objective(trial):
     torch.cuda.manual_seed(seed)
     
     ########## Data Loading #########
-    data = lasa_spd_dataset.LASA_SPD(filename = filename, device = device)
+    data = lasa_spd_dataset.LASA_SPD(filename = args.file, device = device)
     dim = data.dim
     params = {'batch_size': batch_size, 'shuffle': True}
     dataloader = DataLoader(data.dataset, **params)
@@ -75,7 +76,7 @@ def objective(trial):
     optimizer = getattr(optim, optimizer_name)(params, lr=lr, weight_decay= 0)
     
     error = 10000
-    for i in range(nr_epochs):
+    for i in range(args.epoch):
         ## Training ##
         for local_x, local_y in dataloader:
             dataloader.dataset.set_step()
@@ -101,18 +102,24 @@ def objective(trial):
                 frechet_e, dtw_e = iros_evaluation(data.train_data, predicted_trajs, device)
                 if dtw_e < error:
                     error = dtw_e
-                    torch.save(iflow.state_dict(), os.getcwd() + "/search/saved_model/" + filename + "_trial" + str(trial.number) +"_best.pt")
-        trial.report(error, nr_epochs)
+                    torch.save(iflow.state_dict(), os.getcwd() + "/search/saved_model/" + args.file + "_trial" + str(trial.number) +"_best.pt")
+        trial.report(error, args.epoch)
         if trial.should_prune():
             raise optuna.exceptions.TrialPruned()
     return error
 
 if __name__ == '__main__':
-    sampler = TPESampler(SEED)
+    parser = argparse.ArgumentParser(description='manual to this script')
+    parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--trials", type=int, default=100)
+    parser.add_argument("--file", type=str, default="NShape_SPD")
+    parser.add_argument("--epoch", type=int, default=100)
+    args = parser.parse_args()
+    sampler = TPESampler(args.seed)
     study = optuna.create_study(direction="minimize",sampler=sampler)
-    study.optimize(objective, n_trials=80)
+    study.optimize(objective, n_trials=args.trials)
 
-    joblib.dump(study, "study_1_8_relu_adamax.pkl")
+    joblib.dump(study, os.getcwd() + "/search/study_"+str(args.seed)+ args.file+".pkl")
 
     pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
     complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])    
@@ -122,7 +129,7 @@ if __name__ == '__main__':
     print("  Number of pruned trials: ", len(pruned_trials))
     print("  Number of complete trials: ", len(complete_trials))
 
-    print("Best trial:")
+    print("Best trial for {}:".format(args.file))
     trial = study.best_trial
 
     print("  Value: ", trial.value)
