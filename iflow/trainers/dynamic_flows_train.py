@@ -16,7 +16,7 @@ def goto_dynamics_train(iflow, x, y):
     loss_trj = log_p_z0 + log_det_J_x0.squeeze()
 
     ########## Last step #############
-    yN = yN[:1,:]   #终点
+    yN = yN[:1,:]
     x_n, log_det_J_xn = iflow(yN)
     log_p_xn = iflow.dynamics.compute_stable_log_px(x_n)
     loss_end = log_p_xn + log_det_J_xn.squeeze()

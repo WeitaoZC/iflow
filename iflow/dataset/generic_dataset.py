@@ -81,25 +81,25 @@ class Dataset(torch.utils.data.Dataset):
     'Characterizes a dataset for PyTorch'
     def __init__(self, trajs, device, steps=20):
         'Initialization'
-        dim = trajs[0].shape[1] #(x,y,z)
+        dim = trajs[0].shape[1]
 
         self.x = []
-        self.x_n = np.zeros((0, dim))   #(0,3)
+        self.x_n = np.zeros((0, dim))
         for i in range(steps):
             tr_i_all = np.zeros((0,dim))
-            for tr_i in  trajs:             #tr_i shape:(1000,3)
-                _trj = tr_i[i:i-steps,:]    #0:-20->0:980
-                tr_i_all = np.concatenate((tr_i_all, _trj), 0)          #trajs[0][0:230]    shpae:(230*3,2)
-                self.x_n = np.concatenate((self.x_n, tr_i[-1:,:]),0)    #trajs[0][-1]       shape:(3*20,2)
-            self.x.append(tr_i_all) #(20,230*3,2)
+            for tr_i in  trajs:             
+                _trj = tr_i[i:i-steps,:]    
+                tr_i_all = np.concatenate((tr_i_all, _trj), 0)          
+                self.x_n = np.concatenate((self.x_n, tr_i[-1:,:]),0)    
+            self.x.append(tr_i_all) 
 
-        self.x = torch.from_numpy(np.array(self.x)).float().to(device)      #(20,230*3,2)
-        self.x_n = torch.from_numpy(np.array(self.x_n)).float().to(device)  #(3*20,2)converge point, same point for one pattern
+        self.x = torch.from_numpy(np.array(self.x)).float().to(device)      
+        self.x_n = torch.from_numpy(np.array(self.x_n)).float().to(device)  
 
-        self.len_n = self.x_n.shape[0]  #60     #80
-        self.len = self.x.shape[1]      #230*3  #980*3
-        self.steps_length = steps       #20     #20
-        self.step = steps - 1           #19     #19
+        self.len_n = self.x_n.shape[0]  
+        self.len = self.x.shape[1]      
+        self.steps_length = steps       
+        self.step = steps - 1           
 
     def __len__(self):
         'Denotes the total number of samples'
@@ -109,6 +109,7 @@ class Dataset(torch.utils.data.Dataset):
         if step is None:
             self.step = np.random.randint(1, self.steps_length-1)
 
+    ##### sampling mathod must be define for your data
     def __getitem__(self, index):
         'Generates one sample of data'
 

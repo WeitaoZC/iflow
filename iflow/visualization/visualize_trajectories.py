@@ -54,22 +54,35 @@ def visualize_2d_generated_trj(val_trj, iflow, device, fig_number=1):
     plt.pause(0.001)
 
 def visualize_3d_generated_trj(val_trj, trj_y, device, fig_number=1, fig_name = None):
+    '''
+    Max number of demonstration trajectories: 7
+
+    if the dimention of the data is 3, the function will plot the demonstration(dot line) and the prediction(solid line),
+    otherwise the function will plot the last 3 dimentions of the data
+
+    if the number of prediction trajectories are larger than the number of demonstration trajectories,
+    i.e. user give new strating points to generated new trajectories, the function will also show them in the same figure with big dot
+    '''
     n_trj = len(val_trj)
     dim = val_trj[0].shape[-1]
 
     plt.figure(fig_number).clf()
     fig = plt.figure(num=fig_number)
     ax = fig.gca(projection='3d')
-    ax.set_title("3D")
     ax.set_xlabel("X")
     ax.set_ylabel("Y")
     ax.set_zlabel("Z")
-    colors = ["r",'g','k','b']
+    colors = ["k",'g','r','b', 'c', 'y', 'm']
     for i in range(n_trj):
-        ax.plot(trj_y[i][:,0], trj_y[i][:,1], trj_y[i][:,2],color = colors[i])
-        ax.plot(val_trj[i][:,0], val_trj[i][:,1], val_trj[i][:,2],color = colors[i],linestyle = ":")
-    ax.view_init(elev=-90, azim=60)
-    # plt.savefig(os.getcwd() +"/results/trajectories/"+ fig_name +".svg"，dpi = )
+        ax.plot(trj_y[i][:,-3], trj_y[i][:,-2], trj_y[i][:,-1],color = colors[i])
+        ax.plot(val_trj[i][:,-3], val_trj[i][:,-2], val_trj[i][:,-1],color = colors[i],linestyle = ":")
+    for i in range(n_trj, len(trj_y)):
+        ax.plot(trj_y[i][:,-3], trj_y[i][:,-2], trj_y[i][:,-1], "o")
+    ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+    ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+    ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+    ax.view_init(elev=100, azim=-90)
+    # plt.savefig(os.getcwd() +"/results/trajectories/"+ fig_name +".svg", dpi = 600)
     # plt.close()
     plt.show()
-    plt.pause(0.001)
+    # plt.pause(0.001)

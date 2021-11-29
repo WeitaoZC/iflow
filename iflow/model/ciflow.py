@@ -35,7 +35,7 @@ class ContinuousDynamicFlow(nn.Module):
     def generate_trj(self, y0, yn, noise=False, reverse=False):
         z0 = self.flow_forward(y0)
         zn = self.flow_forward(yn)
-        trj_z = self.dynamics.generate_trj(z0, zn, reverse = reverse, noise = noise)
+        trj_z = self.dynamics.generate_trj(z0, zn, reverse = reverse, noise = noise) # check the function if you want to reset the stop condition
         trj_y = self.flow_backward(trj_z[:, 0, :])
         return trj_y
 

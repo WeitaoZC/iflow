@@ -59,18 +59,22 @@ class DynamicModel(nn.Module):
                 xt0 = xt1
         return xt0
 
-    def generate_trj(self, xti, xtn, reverse=False, noise=False):
+    def generate_trj(self, xti, xtn, reverse=False, noise=False, threshhold = 0.03, Maxp = 6000):
+        '''
+        user can define the stop threashold
+        and the max number of points of one trajectory
+        '''
         xt0 = xti
         trx = xt0[None, ...]
         i = 0
         if not reverse:
-            while(torch.dist(xt0, xtn, p=2)>0.03 and i<3000):
+            while(torch.dist(xt0, xtn, p=2)>threshhold and i<Maxp):
                 xt1 = self.step_forward(xt0, noise=noise)
                 xt0 = xt1
                 trx = torch.cat((trx, xt0[None, ...]))
                 i+=1
         else:
-            while(torch.dist(xt0, xtn, p=2)>0.03 and i<3000):
+            while(torch.dist(xt0, xtn, p=2)>threshhold and i<Maxp):
                 xt1 = self.step_backwards(xt0, noise=noise)
                 xt0 = xt1
                 trx = torch.cat((trx, xt0[None, ...]))
@@ -105,8 +109,8 @@ class DynamicModel(nn.Module):
         _var = torch.zeros(xti.shape[0], self.dim, self.dim).to(xti)    #(batch,2,2)covariance matrix
         if not reverse:
             for i in range(T):
-                Ad = self.first_Taylor_dyn(_mu) * self.dt + torch.eye(self.dim).to(xti) #(batch,2,2)
-                _mu = self.velocity(_mu) * self.dt + _mu    #(batch,2)
+                Ad = self.first_Taylor_dyn(_mu) * self.dt + torch.eye(self.dim).to(xti)
+                _mu = self.velocity(_mu) * self.dt + _mu
                 _var = torch.bmm(torch.bmm(Ad, _var), Ad) + self.var * self.dt
         else:
             for i in range(T):
