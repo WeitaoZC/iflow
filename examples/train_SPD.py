@@ -129,7 +129,7 @@ if __name__ == '__main__':
                 ##### save the current model if its DTW loss is lower #####
                 if dtw_e < error:
                     error = dtw_e
-                    torch.save(iflow.state_dict(), os.getcwd() + "/best_models/search/" + filename + str(args.depth) +"best.pt")
+                    # torch.save(iflow.state_dict(), os.getcwd() + "/best_models/search/" + filename + str(args.depth) +"best.pt")
 
                 ##### Inside Information #####
                 step = 20

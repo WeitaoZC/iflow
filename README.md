@@ -1,6 +1,8 @@
-# Pytorch Implementation of Stable Dynamic Flows (ImitationFlows)
-This library provides the models and the learning algorithms for learning deep stochastic stable dynamics by Invertible Flows.
-The model is composed by a latent stochastic stable dynamic system and an invertible flow. See [1](https://arxiv.org/abs/2010.13129)
+# Pytorch Implementation of RiemannianFlow (learning stable Symmetric Positive Definite (SPD) and Unit Quaternion (UQ) data)
+## Based on Stable Dynamic Flows (ImitationFlows)
+This original library provides the models and the learning algorithms for learning deep stochastic stable dynamics by Invertible Flows.
+The original model is composed by a latent stochastic stable dynamic system and an invertible flow. See [1](https://arxiv.org/abs/2010.13129)
+We propose a geometry-aware approach to learn data on the manifold such as SPD or uq data.
 
 The models and the learning algorithms are implemented in PyTorch.
 
@@ -16,6 +18,7 @@ pip install -e .
 ```
 
 ## Examples
+## original part
 Examples are placed in the [`examples`](./examples) directory.
 
 <img width="250" align="middle" src="https://github.com/TheCamusean/iflow/blob/main/.assets/rshape.gif">
@@ -43,7 +46,26 @@ Limit Cycle Motions with drumming dataset
 ```
 python examples/train_pouring.py 
 ```
+## New part
+### New created Dataset
+2 artificially made dataset based on LASA dataset:'LASA_HandWriting_SPD' and 'LASA_HandWriting_SPD' in [`data`](./data)
+### Naive example
+Correspomding examples are also placed in the [`examples`](./examples) directory.
+Take [`train_SPD.py`](./examples/train_SPD.py) as an example:
+```
+python examples/train_SPD.py --depth 11 --lr 0.01
+```
+you can set part of the hyperparameters by the above command.(for more information check the script)
 
+If you uncomment the lines of 118 amd 119, you will finally get the following figure:
+<img width="250" align="middle" src="https://github.com/WeitaoZC/iflow/blob/main/results/trajectories/Sine_SPD.svg">
+<img width="250" align="middle" src="https://github.com/WeitaoZC/iflow/blob/main/results/stream3d/Sine_SPD.pdf">
+
+
+### Train your own dataset
+To train SPD data, check [`train_SPD.py`](./examples/train_SPD.py) as an example.
+If you want to train your own data, you need to create a new data file like [`train_SPD.py`](./ifloe/dataset/lasa_spd_dataset.py)
+And modify the [`train_SPD.py`](./examples/train_SPD.py) to fit your desire
 
 ## Basics
 
