@@ -59,9 +59,11 @@ you can set part of the hyperparameters by the above command.(for more informati
 
 If you uncomment the lines of 118 amd 119, you will finally get the following figure:
 Generated and demonstration trajectories on the tagent space:
+
 <img width="250" align="middle" src="https://github.com/WeitaoZC/iflow/blob/main/results/trajectories/Sine_SPD.svg">
 
 Stream lines for the whole related space:
+
 <img width="250" align="middle" src="https://github.com/WeitaoZC/iflow/blob/main/results/stream3d/100dpi/Sine_SPD.png">
 
 
