@@ -2,7 +2,8 @@
 ## Based on Stable Dynamic Flows (ImitationFlows)
 This original library provides the models and the learning algorithms for learning deep stochastic stable dynamics by Invertible Flows.
 The original model is composed by a latent stochastic stable dynamic system and an invertible flow. See [1](https://arxiv.org/abs/2010.13129)
-We propose a geometry-aware approach to learn data on the manifold such as SPD or uq data.
+
+We propose a geometry-aware approach to learn data on the manifold such as SPD or UQ data.
 
 The models and the learning algorithms are implemented in PyTorch.
 
@@ -49,7 +50,7 @@ python examples/train_pouring.py
 ## New part
 ### New created Dataset
 2 artificially made dataset based on LASA dataset:'LASA_HandWriting_SPD' and 'LASA_HandWriting_SPD' in [`data`](./data)
-### Naive example
+### Example
 Correspomding examples are also placed in the [`examples`](./examples) directory.
 Take [`train_SPD.py`](./examples/train_SPD.py) as an example:
 ```
@@ -59,16 +60,19 @@ you can set part of the hyperparameters by the above command.(for more informati
 
 If you uncomment the lines of 118 amd 119, you will finally get the following figure:
 Generated and demonstration trajectories on the tagent space:
-
-<img width="250" align="middle" src="https://github.com/WeitaoZC/iflow/blob/main/results/trajectories/Sine_SPD.svg">
+![image](https://github.com/WeitaoZC/iflow/blob/main/results/trajectories/Sine_SPD.svg)
 
 Stream lines for the whole related space:
+![image](https://github.com/WeitaoZC/iflow/blob/main/results/stream3d/100dpi/Sine_SPD.pdf)
 
-<img width="250" align="middle" src="https://github.com/WeitaoZC/iflow/blob/main/results/stream3d/100dpi/Sine_SPD.png">
+There are also model saving commands in the script, check it to change its file name or its directory.
 
+We also provide the scripts to handel the output from well-trained model, including selecting points from the generated data corresponding to the demonstration; transferring data on the tangent space to their original maniflods; comparing the prediction and demonstration on the manifold and so on.
+check [`SPD_comp.py`](./examples/SPD_comp.py) and [`UQ_comp.py`](./examples/UQ_comp.py) for more details.
 
 ### Train your own dataset
-To train SPD data, check [`train_SPD.py`](./examples/train_SPD.py) as an example.
+To train whatever kind of data , check [`train_SPD.py`](./examples/train_SPD.py) or [`train_UQ.py`](./examples/train_UQ.py) as the examples. They are quiet similar
+
 If you want to train your own data, you need to create a new data file like [`train_SPD.py`](./ifloe/dataset/lasa_spd_dataset.py)
 And modify the [`train_SPD.py`](./examples/train_SPD.py) to fit your desire
 
