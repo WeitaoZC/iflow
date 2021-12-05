@@ -1,7 +1,7 @@
 # Pytorch Implementation of RiemannianFlow (learning stable Symmetric Positive Definite (SPD) and Unit Quaternion (UQ) data)
 ## Based on Stable Dynamic Flows (ImitationFlows)
 This original library provides the models and the learning algorithms for learning deep stochastic stable dynamics by Invertible Flows.
-The original model is composed by a latent stochastic stable dynamic system and an invertible flow. See [1](https://arxiv.org/abs/2010.13129)
+The original model is composed by a latent stochastic stable dynamic system and an invertible flow. See [1](https://arxiv.org/abs/2010.13129) and [origin](https://github.com/TheCamusean/iflow)
 
 We propose a geometry-aware approach to learn data on the manifold such as SPD or UQ data.
 
@@ -19,38 +19,9 @@ pip install -e .
 ```
 
 ## Examples
-## original part
-Examples are placed in the [`examples`](./examples) directory.
-
-<img width="250" align="middle" src="https://github.com/TheCamusean/iflow/blob/main/.assets/rshape.gif">
-
-You can run examples in
-
-#### Toy Dataset
-Limit Cycle with  IROS dataset [1] (results are saved in examples/experiments)
-
-```
-python examples/train_iros.py 
-```
-
-Goto Motions with LASA dataset [2]
-```
-python examples/train_lasa.py 
-```
-
-#### Real Robot Dataset
-Goto Motions with pouring dataset
-```
-python examples/train_pouring.py 
-```
-Limit Cycle Motions with drumming dataset
-```
-python examples/train_pouring.py 
-```
-## New part
 ### New created Dataset
 2 artificially made dataset based on LASA dataset:'LASA_HandWriting_SPD' and 'LASA_HandWriting_SPD' in [`data`](./data)
-### Example
+### Example of manually made dataset
 Corresponding examples are also placed in the [`examples`](./examples) directory.
 Take [`train_SPD.py`](./examples/train_SPD.py) as an example:
 ```
@@ -75,6 +46,8 @@ Check [`SPD_comp.py`](./examples/SPD_comp.py) and [`UQ_comp.py`](./examples/UQ_c
 If you want to train your own data, you need to create a new data file like [`robot_uq_dataset.py`](./ifloe/dataset/robot_uq_dataset.py), and modify the new file to fit your desire.
 
 Then create a new training file or modify [`train_uq.py`](./examples/train_SPD.py) file to load your own data, and adjust the parameters of the model to train it.
+
+Take our real robot experiment as an example, check [`from_scratch.ipynb`](./examples/from_scratch.ipynb)
 
 ## Basics
 
@@ -115,6 +88,8 @@ If you found this library useful in your research, please consider citing
   year={2020}
 }
 ```
+
+Our paper is also on the way.
 
 _Our Flows library has been highly influenced by the amazing repositories_
  

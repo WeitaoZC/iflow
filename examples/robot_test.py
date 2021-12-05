@@ -39,7 +39,7 @@ def create_flow_seq(dim, depth, acti_func):
 
 if __name__ == "__main__":
     ##### Must keep the same parameter with the used model parameter file #####
-    filename = "real_pos"
+    filename = "real_ori_vec"
     layers = 11
     activation_function = "ReLu"
     device = torch.device('cuda:' + str(0) if torch.cuda.is_available() else 'cpu')
@@ -90,7 +90,7 @@ if __name__ == "__main__":
         unnormed_pre = data.unormalize(predicted_trajs)
 
         ##### check the function for more details #####
-        visualize_3d_generated_trj(unnormed_dem, unnormed_pre, device, fig_number=2)
+        visualize_3d_generated_trj(unnormed_dem, unnormed_pre, device, fig_number=2, view1=40, view2=-80)
         # print(new_traj_pred.shape)
 
     ##### save generated uq data to txt #####

@@ -53,7 +53,7 @@ def visualize_2d_generated_trj(val_trj, iflow, device, fig_number=1):
     plt.draw()
     plt.pause(0.001)
 
-def visualize_3d_generated_trj(val_trj, trj_y, device, fig_number=1, fig_name = None):
+def visualize_3d_generated_trj(val_trj, trj_y, device, fig_number=1, fig_name = None, view1 = 100, view2 = -90):
     '''
     Max number of demonstration trajectories: 7
 
@@ -81,7 +81,7 @@ def visualize_3d_generated_trj(val_trj, trj_y, device, fig_number=1, fig_name = 
     ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
     ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
     ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
-    ax.view_init(elev=100, azim=-90)
+    ax.view_init(elev=view1, azim=view2)
     # plt.savefig(os.getcwd() +"/results/trajectories/"+ fig_name +".svg", dpi = 600)
     # plt.close()
     plt.show()

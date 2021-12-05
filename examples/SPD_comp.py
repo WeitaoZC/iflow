@@ -106,7 +106,7 @@ if __name__ == '__main__':
     ##### give subdataset (for all subdataset in the dir or choose one) #####
     # for filename in os.listdir(os.getcwd()+ '/data/LASA_HandWriting_SPD/'):  #choose input data
     #     (filename, extension) = os.path.splitext(filename)
-    filename = 'Multi_Models_3'
+    filename = 'Sshape'
 
     ##### load original data to acquire demonstration data #####
     data = spio.loadmat(directory + filename + '_SPD.mat', squeeze_me=True)
@@ -184,24 +184,50 @@ if __name__ == '__main__':
             SPD1[:, :, j] = exp_map(sym_m[begin+ comp_inds[i][j]])
         generated_SPD.append(SPD1)
         begin += len(unnormlized[i])
-    spio.savemat("D:/Pytorch/iflow/iflow/data/generated_spd/"+filename+".mat", {"SPD1":generated_SPD[0], 
-        "SPD2":generated_SPD[1],"SPD3":generated_SPD[2],"SPD4":generated_SPD[3]})
+    # spio.savemat("D:/Pytorch/iflow/iflow/data/generated_spd/"+filename+".mat", {"SPD1":generated_SPD[0], 
+        # "SPD2":generated_SPD[1],"SPD3":generated_SPD[2],"SPD4":generated_SPD[3]})
 
-    ##### plot the comparison results (distance of SPD pairs)#####
-    plt.figure(figsize=(10, 5))
-    plt.plot([i for i in range(1000)], LD_e[0:1000], "k")
-    plt.plot([i for i in range(1000)], LD_e[1000:2000], "g")
-    plt.plot([i for i in range(1000)], LD_e[2000:3000], "r")
-    plt.plot([i for i in range(1000)], LD_e[3000:4000], "b")
-    plt.autoscale(enable=True, axis='both', tight=None)
-    plt.ylabel("Log Euclidean distanc")
-    # plt.savefig(os.getcwd() +"/results/error/"+ filename +".pdf", dpi = 600)
+    ##### Visualize SPD data on the cone #####
+    fig = plt.figure()
+    ax = fig.gca(projection = '3d')
+    r = 120
+    h = 60
+    u = np.linspace(0, 2*np.pi, 50)
+    v = np.linspace(0, np.pi, 50)
+
+    x = r*np.outer(np.cos(u), np.sin(v))
+    y = r*np.outer(np.sin(u), np.sin(v))
+    z = np.sqrt(x**2+y**2) - h
+
+    ax.plot_surface(x+100, y+100, z, rstride=10, cstride=10, cmap='gray', edgecolors='k', linewidth = 0, alpha=.2)
+
+    gene_color = ["grey", "springgreen", 'tomato', 'deepskyblue']
+    demo_color = ["k","g","r","b"]
+    for i in range(len(generated_SPD)):
+        ax.plot(generated_SPD[i][0,0,:], generated_SPD[i][1,1,:], generated_SPD[i][1,0,:],color = gene_color[i], linewidth = 2.5)
+        ax.plot(SPDs[i][0,0,:], SPDs[i][1,1,:], SPDs[i][1,0,:], demo_color[i], linestyle = ":", linewidth = 2.5)
+    ax.view_init(elev=0, azim=0)
+    ax.grid(False)
+    plt.axis('off')
+    # plt.savefig("C:/Users/Walter/Desktop/research/flow based/figure/UQsphere.pdf", dpi=600)
     plt.show()
     plt.close()
-    print(comp_inds[0])
-    print("max error:{}".format(max(LD_e)))
-    print("min error:{}".format(min(LD_e)))
-    print("average error:{}".format(aver_e))
+
+    ##### plot the comparison results (distance of SPD pairs)#####
+    # plt.figure(figsize=(10, 5))
+    # plt.plot([i for i in range(1000)], LD_e[0:1000], "k")
+    # plt.plot([i for i in range(1000)], LD_e[1000:2000], "g")
+    # plt.plot([i for i in range(1000)], LD_e[2000:3000], "r")
+    # plt.plot([i for i in range(1000)], LD_e[3000:4000], "b")
+    # plt.autoscale(enable=True, axis='both', tight=None)
+    # plt.ylabel("Log Euclidean distanc")
+    # # plt.savefig(os.getcwd() +"/results/error/"+ filename +".pdf", dpi = 600)
+    # plt.show()
+    # plt.close()
+    # print(comp_inds[0])
+    # print("max error:{}".format(max(LD_e)))
+    # print("min error:{}".format(min(LD_e)))
+    # print("average error:{}".format(aver_e))
 
     ##### save the results #####
     # fo.write(filename)
