@@ -19,7 +19,7 @@ class LASA_UQ():
         useddata = spio.loadmat(directory + filename + '.mat', squeeze_me=True) # load data according to your file format
         self.trajs_real = []
         for demo_i in useddata['demoUQ']:
-            self.trajs_real.append(demo_i.tolist()[0].transpose())
+            self.trajs_real.append(demo_i.tolist()[3].transpose())
         trajs_np = np.asarray(self.trajs_real)
         self.n_trajs = trajs_np.shape[0]        #number of trajectories         
         self.trj_length = trajs_np.shape[1]     #length(points) of a trajectory 
