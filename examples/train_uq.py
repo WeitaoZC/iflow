@@ -64,10 +64,11 @@ if __name__ == '__main__':
 
     ##### training for all sub-dataset in dir #####
     all_DTW = dict()
-    for filename in os.listdir(os.getcwd()+ '/data/LASA_HandWriting_UQ/'):
-        (filename, extension) = os.path.splitext(filename)
-        if extension != '.mat':
-            continue
+    for filename in ['Multi_Models_2_UQ', 'Multi_Models_4_UQ', 'Saeghe_UQ', 'Sharpc_UQ', 'Sine_UQ', 'Spoon_UQ', 'Sshape_UQ', 'Trapezoid_UQ', 'WShape_UQ']:
+	#os.listdir(os.getcwd()+ '/data/LASA_HandWriting_UQ/'):
+        # (filename, extension) = os.path.splitext(filename)
+        # if extension != '.mat':
+            #continue
     
     # data = robot_uq_dataset.Robot_UQ(filename = filename, device = device) #this function should be defined by users refering "iflow/dataset/robot_uq_dataset.py"
         data = lasa_uq_dataset.LASA_UQ(filename = filename, device = device)
@@ -145,5 +146,5 @@ if __name__ == '__main__':
                     #print('The Velocity of the latent dynamics are: {}'.format(iflow.dynamics.Kv[0,0]))
     ##### Save all loss changing if needed #####
         all_DTW[filename] = np.array(DTW_loss)
-    np.save(os.getcwd() +"/best_models/direct_UQ/"+ str(args.depth) +"_all_dtw_e.npy", all_DTW)
+    np.save(os.getcwd() +"/best_models/direct_UQ/"+ str(args.depth) +"_all_dtw_e1.npy", all_DTW)
     writer.close()
