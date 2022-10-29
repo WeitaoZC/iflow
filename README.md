@@ -81,15 +81,16 @@ systems with gaussian mixture models." *IEEE Transactions on Robotics* 2011.
 
 If you found this library useful in your research, please consider citing
 ```
-@article{urain2020imitationflows,
-  title={ImitationFlows: Learning Deep Stable Stochastic Dynamic Systems by Normalizing Flows},
-  author={Urain, Julen and Ginesi, Michele and Tateo, Davide and Peters, Jan},
-  journal={IEEE/RSJ International Conference on Intelligent Robots and Systems},
-  year={2020}
+@ARTICLE{wang2022Learning,  
+    author={Wang, Weitao and Saveriano, Matteo and Abu-Dakka, Fares J.},
+    journal={IEEE Access},   title={Learning Deep Robotic Skills on Riemannian manifolds},
+    year={2022},
+    volume={},
+    number={},
+    pages={1-1},
+    doi={10.1109/ACCESS.2022.3217800}
 }
 ```
-
-Our paper is also on the way.
 
 _Our Flows library has been highly influenced by the amazing repositories_
  
